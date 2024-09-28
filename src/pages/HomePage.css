@@ -1,0 +1,18 @@
+@keyframes backgroundAnimation {
+    0% {
+      background-image: url('https://no-fault-doctors.com/wp-content/uploads/2022/05/Common-Types-of-Injuries-a-Car-Accident-Doctor-Can-Treat.jpg');
+    }
+    50% {
+      background-image: url('https://media.istockphoto.com/photos/mid-adult-female-doctor-smiles-for-camera-picture-id1339289855?b=1&k=20&m=1339289855&s=170667a&w=0&h=1qxdCZeLwI7dicdKVC-LR0ykjwZuybFckHCxD7lcOpU=');
+    }
+    100% {
+      background-image: url('https://img.freepik.com/free-photo/cheerful-young-doctor-with-tablet-hall_23-2147763865.jpg?t=st=1727536893~exp=1727540493~hmac=0d6ee8093e8a8245e6e048cf76653b92a7d79101a97d909285bca2110559530a&w=996');
+    }
+  }
+  
+  .animate-background {
+    animation: backgroundAnimation 10s infinite alternate;
+    background-size: cover;
+    background-position: center;
+  }
+  

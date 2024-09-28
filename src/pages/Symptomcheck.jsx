@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Typography, Button, TextField, MenuItem, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, CircularProgress } from '@mui/material';
+import axios from 'axios';
 
 const SymptomForm = () => {
     const [symptom, setSymptom] = useState('');
@@ -15,6 +16,7 @@ const SymptomForm = () => {
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState(null);
+    const [result, setResult] = useState(''); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,46 +24,29 @@ const SymptomForm = () => {
 
         const formData = {
             symptom,
-            age,
+            age: parseInt(age), // Ensure age is a number
             diagnosed,
             sex,
-            weight,
-            height,
+            weight: parseFloat(weight), // Ensure weight is a float
+            height: parseFloat(height), // Ensure height is a float
             alcoholConsumption,
             alcoholFrequency,
             medications,
             familyHistory,
-            diseaseName: "Migraine", // Hardcoded as per your example
-            __v: 0 // Hardcoded as per your example
         };
 
         try {
-            const response = await fetch('https://dirghaaayu.onrender.com/api/symptoms', {
-                method: 'POST',
+            const response = await axios.post('https://rander-api-ml-oo7g.onrender.com/api/symptoms', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
             });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            setSubmitting(false);
+            console.log(response.data); // Log the entire response for debugging
+            setResult(response.data.diseaseName || 'No result found');
             setSubmitted(true);
-            setSymptom('');
-            setAge('');
-            setDiagnosed('');
-            setSex('');
-            setWeight('');
-            setHeight('');
-            setAlcoholConsumption('');
-            setAlcoholFrequency('');
-            setMedications('');
-            setFamilyHistory('');
         } catch (error) {
-            setError(error.message);
+            console.error('Error:', error.response ? error.response.data : error.message); // Log the error for better debugging
+            setError(error.response ? error.response.data : error.message);
             setSubmitting(false);
         }
     };
@@ -201,7 +186,7 @@ const SymptomForm = () => {
                 )}
                 {submitted && (
                     <Typography variant="body2" color="primary">
-                        Data submitted successfully!
+                        Data submitted successfully! The predicted disease is: {result}
                     </Typography>
                 )}
             </form>
