@@ -11,6 +11,7 @@ import Labreport from './pages/Labreport';
 import Chat from './pages/Chat';
 import Finddoctor from './pages/Finddoctor';
 import Dietplan from './pages/Dietplan';
+import Profile from './pages/Profile';
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -29,6 +30,8 @@ function App() {
                 <Route path="/chat" exact element={<Chat />} />
                 <Route path="/Finddoctor" exact element={<Finddoctor />} />
                 <Route path="/Dietplan" exact element={<Dietplan />} />
+                <Route path="/profile" exact element={<Profile />} />
+                {/*  */}
               </Routes>
             </div>
           </div>
