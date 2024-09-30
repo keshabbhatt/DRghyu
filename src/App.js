@@ -12,37 +12,47 @@ import Chat from './pages/Chat';
 import Finddoctor from './pages/Finddoctor';
 import Dietplan from './pages/Dietplan';
 import Profile from './pages/Profile';
+import Admin from './components/Admin';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  const { currentUser } = useSelector((state) => state.user);
+    const { currentUser } = useSelector((state) => state.user);
 
-  return (
-    <ThemeProvider theme={lightTheme}>
-      <BrowserRouter>
-        {currentUser ? (
-          <div className="flex flex-col w-full h-screen bg-gray-100 text-gray-900 overflow-hidden">
-            <Navbar currentUser={currentUser} />
-            <div className="flex-grow overflow-y-auto">
-              <Routes>
-                <Route path="/" exact element={<Home />} />
-                <Route path="/Symptomcheck" exact element={<Symptomcheck />} />
-                <Route path="/Labreport" exact element={<Labreport />} />
-                <Route path="/chat" exact element={<Chat />} />
-                <Route path="/Finddoctor" exact element={<Finddoctor />} />
-                <Route path="/Dietplan" exact element={<Dietplan />} />
-                <Route path="/profile" exact element={<Profile />} />
-                {/*  */}
-              </Routes>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col w-full h-screen bg-gray-100 text-gray-900 overflow-hidden">
-            <Authentication />
-          </div>
-        )}
-      </BrowserRouter>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider theme={lightTheme}>
+            <BrowserRouter>
+                {currentUser ? (
+                    <div className="flex flex-col w-full h-screen bg-gray-100 text-gray-900 overflow-hidden">
+                        <Navbar currentUser={currentUser} />
+                        <div className="flex-grow overflow-y-auto">
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/Symptomcheck" element={<Symptomcheck />} />
+                                <Route path="/Labreport" element={<Labreport />} />
+                                <Route path="/chat" element={<Chat />} />
+                                <Route path="/Finddoctor" element={<Finddoctor />} />
+                                <Route path="/Dietplan" element={<Dietplan />} />
+                                <Route path="/profile" element={<Profile />} />
+                                {/* Protected Admin Route */}
+                                <Route
+                                    path="/admin"
+                                    element={
+                                        <ProtectedRoute adminOnly={true}>
+                                            <Admin />
+                                        </ProtectedRoute>
+                                    }
+                                />
+                            </Routes>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex flex-col w-full h-screen bg-gray-100 text-gray-900 overflow-hidden">
+                        <Authentication />
+                    </div>
+                )}
+            </BrowserRouter>
+        </ThemeProvider>
+    );
 }
 
 export default App;

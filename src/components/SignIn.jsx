@@ -1,31 +1,7 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import TextInput from "./TextInput";
-import Button from "./Button";
-import { UserSignIn } from "../api";
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/reducers/userSlice";
-
-const Container = styled.div`
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-  background-color: #f5f5dc; /* Creamy color */
-  padding: 20px;
-  border-radius: 10px;
-`;
-const Title = styled.div`
-  font-size: 30px;
-  font-weight: 800;
-  color: blue; /* Blue color for title */
-`;
-const Span = styled.div`
-  font-size: 16px;
-  font-weight: 400;
-  color: ${({ theme }) => theme.text_secondary + 90};
-`;
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -42,59 +18,65 @@ const SignIn = () => {
     return true;
   };
 
-  const handelSignIn = async () => {
+  const handleSignIn = async () => {
     setLoading(true);
     setButtonDisabled(true);
     if (validateInputs()) {
-      await UserSignIn({ email, password })
-        .then((res) => {
-          dispatch(loginSuccess(res.data));
-          alert("Login Success");
-          setLoading(false);
-          setButtonDisabled(false);
-        })
-        .catch((err) => {
-          alert(err.response.data.message);
-          setLoading(false);
-          setButtonDisabled(false);
+      console.log("Email:", email); // Should show a valid email
+      console.log("Password:", password); // Should show the password
+      try {
+        const res = await axios.post("http://localhost:8080/api/user/login", {
+          email,
+          password,
         });
+        dispatch(loginSuccess(res.data));
+        alert("Login Success");
+      } catch (err) {
+        console.log(err.response?.data); // Log error response
+        alert(err.response?.data?.message || err.message);
+      } finally {
+        setLoading(false);
+        setButtonDisabled(false);
+      }
+    } else {
+      setLoading(false);
+      setButtonDisabled(false);
     }
   };
+  
 
   return (
-    <Container>
-      <div>
-        <Title>Welcome to dirghaaayu</Title>
-        <Span>log in with your details:</Span>
+    <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold text-gray-800 mt-24">Welcome to Vidhyalaya 🩵</h2>
+        <p className="text-gray-600">Please login with your details here</p>
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          flexDirection: "column",
-        }}
-      >
-        <TextInput
-          label="Email Address"
-          placeholder="Enter your email address"
+      <div className="space-y-4">
+        <input
+          type="email"
+          className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Email Address"
           value={email}
-          handelChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <TextInput
-          label="Password"
-          placeholder="Enter your password"
-          password
+        <input
+          type="password"
+          className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Password"
           value={password}
-          handelChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <Button
-          text="SignIn"
-          onClick={handelSignIn}
-          isLoading={loading}
-          isDisabled={buttonDisabled}
-        />
+        <button
+          onClick={handleSignIn}
+          disabled={buttonDisabled}
+          className={`w-full p-3 mt-4 text-white bg-blue-600 rounded-md focus:outline-none ${
+            buttonDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+          }`}
+        >
+          {loading ? "Signing In..." : "Sign In"}
+        </button>
       </div>
-    </Container>
+    </div>
   );
 };
 
